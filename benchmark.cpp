@@ -1,6 +1,7 @@
 #include "benchmark.h"
 #include <iostream>
 #include <chrono>
+#include <iomanip>
 
 double timeFloydWarshall(myGraphM& g) {
     myMatrix* d = nullptr;
@@ -16,12 +17,12 @@ double timeFloydWarshall(myGraphM& g) {
     return std::chrono::duration<double, std::milli>(end - start).count();
 }
 
-double timeBFS(int& g) {
+double timeBFS(myGraphM& g) {
     myMatrix* d = nullptr;
     myMatrix* pi = nullptr;
 
     auto start = std::chrono::high_resolution_clock::now();
-    g.BFS(g);
+    g.BFS(0);
     auto end = std::chrono::high_resolution_clock::now();
 
     delete d;

@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra
 
-TARGET = labs
+TARGET = project
 
 SRC = $(wildcard *.cpp)
 OBJS = $(SRC:.cpp=.o)

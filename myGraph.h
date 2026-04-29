@@ -56,6 +56,10 @@ class myGraphM {
         //random graph generator
         void generateRandomGraph(int n, double p, int minW, int maxW);
         bool isConnected(int s, double* &d, int* &pi);
+        void generateFullyConnectedDirected(int n, int minW, int maxW);
+        //generates graphs that are guaranteed to be connected
+        void generateFullyConnectedUndirected(int n, int minW, int maxW);
+        void generateSparseConnectedUndirected(int n, int minEdges, int maxEdges, int minW, int maxW);
     private:
         int size;
         double* m;

@@ -456,6 +456,12 @@ bool myGraphM::isConnected(int s, double* &d, int* &pi) {
     delete[] status;
     return visitedCount == size;
 }
+void generateFullyConnectedUndirected(int n, int minW, int maxW) {
+
+}
+void generateSparseConnectedUndirected(int n, int minEdges, int maxEdges, int minW, int maxW) {
+    
+}
 
 // void myGraphM::transitiveClousure(myMatrix* &tCout) {
 

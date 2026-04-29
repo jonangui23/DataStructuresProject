@@ -191,10 +191,12 @@ void myGraphM::BFS(int s) {
         for (int v = 0; v < size; v++) {
             std::cout << "checking edge (" << u << "->" << v << ")";
             if (existEdge(u, v)) {
-            std::cout << " [Edge Exists]";
-            } else {
-                std::cout << " [No Edge]" << std::endl;
-                continue;
+                if (status[v] == color::white) {
+                    status[v] = color::gray;
+                    d[v] = d[u] + 1;
+                    pi[v] = u;
+                    q.enqueue(v);
+                }
             }
             std::cout << std::endl;
             if (existEdge(u, v) && status[v] == color::white) {
@@ -430,47 +432,29 @@ void myGraphM::floydWarshall(myMatrix* &dout, myMatrix* &piout) {
 //////////FOR PROJECT (IS CONNECTED FUNCITON)///////////////////
 bool myGraphM::isConnected(int s, double* &d, int* &pi) {
     //initializing variables
-    int count = 0;
-    d = new double[size];
-    pi = new int[size];
-    bool* done = new bool[size];
-    myPriorityQueue* pq = new myPriorityQueue(size);
-
+    color* status = new color[size];
+    myQueue q;
     for (int i = 0; i < size; i++) {
-        d[i] = __DBL_MAX__;
-        pi[i] = -1;
-        done[i] = false; 
-    }
-    d[s] = 0;
-    for (int i = 0; i < size; i++) {
-        pq->push(i, d[i]); 
+        status[i] = color::white;
     }
     
-    while (!pq->isEmpty()) {
-        myData out = pq->pop();
-        int u = out.index;
-        
-        
-        if(!done[u]) {
-            done[u] = true;
-            setCurrentVertex(u);
-        
-            int v = 0;
-            while (getNextAdjacent(u,v)) {
-                //relaxation
-                double w = getEdgeWeight(u,v);
-                if (!done[v] && d[u] != __DBL_MAX__ && d[v] > d[u] + w) {
-                    d[v] = d[u] + w;
-                    pi[v] = u;
-                    pq->decreaseKey(v, d[v]);
-                    count++;
-                }
-            }       
+    status[0] = color::gray;
+    q.enqueue(0);
+
+    int visitedCount = 1;
+    while (!q.isEmpty()) {
+        int u = q.dequeue();
+        for (int v = 0; v < size; v++) {
+            if (existEdge(u,v) && status[v] == color::white) {
+                status[v] = color::gray;
+                visitedCount++;
+                q.enqueue(v);
+            }
         }
+        status[u] == color::black; 
     }
-    delete pq;
-    delete[] done;
-    return size == count;
+    delete[] status;
+    return visitedCount == size;
 }
 
 // void myGraphM::transitiveClousure(myMatrix* &tCout) {

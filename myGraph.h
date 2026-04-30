@@ -60,6 +60,8 @@ class myGraphM {
         //generates graphs that are guaranteed to be connected
         void generateFullyConnectedUndirected(int n, int minW, int maxW);
         void generateSparseConnectedUndirected(int n, int minEdges, int maxEdges, int minW, int maxW);
+        void resetGraph(int n);
+        int randomWeight(int minW, int maxW);
     private:
         int size;
         double* m;

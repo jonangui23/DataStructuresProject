@@ -456,13 +456,102 @@ bool myGraphM::isConnected(int s, double* &d, int* &pi) {
     delete[] status;
     return visitedCount == size;
 }
-void generateFullyConnectedUndirected(int n, int minW, int maxW) {
+void myGraphM::generateFullyConnectedDirected(int n, int minW, int maxW) {
+    resetGraph(n);
 
+    for (int u = 0; u < size; u++) {
+        for (int v = 0; v < size; v++) {
+           if (u != v) {
+            int w = randomWeight(minW, maxW);
+            setDirectedEdge(u,v,w);
+           }
+        }
+    }
 }
-void generateSparseConnectedUndirected(int n, int minEdges, int maxEdges, int minW, int maxW) {
+void myGraphM::generateFullyConnectedUndirected(int n, int minW, int maxW) {
+    resetGraph(n);
+
+    for (int u = 0; u < size; u++) {
+        for (int v = u + 1; v < size; v++) {
+            int w = randomWeight(minW, maxW);
+            setUnDirectedEdgeW(u,v,w);
+        }
+    }
+}
+void myGraphM::generateSparseConnectedUndirected(int n, int minEdges, int maxEdges, int minW, int maxW) {
+    resetGraph(n);
+
+    if (minEdges < 1) {
+        minEdges = 1;
+    }
     
-}
+    if (maxEdges >= size) {
+        maxEdges = size - 1;
+    }
+    
+    if (minEdges > maxEdges) {
+        minEdges = maxEdges;
+    }
 
+    //create chain to guarantee correctness
+    for (int i = 0; i < size - 1; i++) {
+        int w = randomWeight(minW, maxW);
+        setUnDirectedEdgeW(i, i + 1, w);
+    }
+    //add extra edges until every vertex has at least one edge
+    int attempts = 0;
+    int maxAttempts = size * size * 10;
+
+    while (attempts < maxAttempts) {
+        int u = rand() % size;
+        int v = rand() % size;
+
+        if (u != v) {
+            if (!existEdge(u, v)) {
+                if (getDegree(u) < maxEdges && getDegree(v) < maxEdges) {
+                    int w = randomWeight(minW, maxW);
+                    setUnDirectedEdgeW(u, v, w);
+                }
+            }
+        }
+
+        attempts++;
+    }
+    //randomly add more edges without exceeding maxEdges
+    for (int u = 0; u < size; u++) {
+        int v = 0;
+        while (getDegree(u) < maxEdges) {
+            if (u != v) {
+                if (!existEdge(u,v)) {
+                    if (getDegree(v) < maxEdges) {
+                        int w = randomWeight(minW, maxW);
+                        setUnDirectedEdgeW(u, v, w);
+                    }
+                }
+            }
+           v++; 
+        }
+    }
+}
+void myGraphM::resetGraph(int n) {
+    delete[] m;
+    delete[] current;
+
+    size = n;
+    m = new double[size * size];
+    current = new int[size];
+
+    for (int i = 0; i < size; i++) {
+        m[i] = 0;
+    }
+    
+    for (int i = 0; i < size; i++) {
+        current[i] = -1;
+    }
+}
+int myGraphM::randomWeight(int minW, int maxW) {
+    return minW + rand() % (maxW - minW -1);
+}
 // void myGraphM::transitiveClousure(myMatrix* &tCout) {
 
 // }
